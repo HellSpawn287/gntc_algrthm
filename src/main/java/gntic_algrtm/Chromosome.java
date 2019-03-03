@@ -1,29 +1,31 @@
 package gntic_algrtm;
 
+import java.util.Objects;
+
 public class Chromosome {
     private int geneNumber;
     private byte[] genes;
 
-    public Chromosome(Builder builder) {
+    private Chromosome(Builder builder) {
         this.geneNumber = builder.geneNumber;
         this.genes = builder.genes;
     }
 
 
-    public int size() {
+    int size() {
         return genes.length;
     }
 
-    public int getFenotype() {
+    public int getPhenotype() {
         String temp = this.toString();
         return Integer.parseInt(temp, 2);
     }
 
-    public byte getSingleGene(int index) {
+    byte getSingleGene(int index) {
         return genes[index];
     }
 
-    public byte setSingleGene(int index, byte value) {
+    byte setSingleGene(int index, byte value) {
         return this.genes[index] = value;
     }
 
@@ -31,43 +33,48 @@ public class Chromosome {
         return geneNumber;
     }
 
-    public byte[] getGenes() {
+    byte[] getGenes() {
         return genes;
+    }
+
+    void setGenes(byte[] genes) {
+        this.genes = genes;
+        Objects.requireNonNull(this.genes);
     }
 
     @Override
     public String toString() {
-        String geneString = "";
+        StringBuilder geneString = new StringBuilder();
         for (int i = 0; i < size(); i++) {
-            geneString += getSingleGene(i);
+            geneString.append(getSingleGene(i));
         }
-        return geneString;
+        return geneString.toString();
     }
 
     public static class Builder {
         private int geneNumber;
-        private byte[] genes = new byte[5];
+        private byte[] genes = new byte[AlgorithmEngine.geneNumber];
 
         public Builder geneNumber(int geneNumber) {
             this.geneNumber = geneNumber;
             return this;
         }
 
-        public Builder configNullGenes() {
+        Builder configNullGenes() {
             byte[] nullGenes = {0, 0, 0, 0, 0};
             this.genes = nullGenes;
             return this;
         }
 
-        public Builder initialize() {
-            for (int i = 0; i < 5; i++) {
+        Builder initialize() {
+            for (int i = 0; i < AlgorithmEngine.geneNumber; i++) {
                 byte gene = (byte) Math.round(Math.random());
                 genes[i] = gene;
             }
             return this;
         }
 
-        public Chromosome build() {
+        Chromosome build() {
             return new Chromosome(this);
         }
     }

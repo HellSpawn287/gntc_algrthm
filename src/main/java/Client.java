@@ -1,16 +1,23 @@
+import gntic_algrtm.AlgorithmEngine;
 import gntic_algrtm.Chromosome;
+import gntic_algrtm.Function;
 import gntic_algrtm.Population;
 
 public class Client {
     public static void main(String[] args) {
-        Chromosome chromosome = new Chromosome.Builder().initialize().build();
-        System.out.println(chromosome);
-        System.out.println(chromosome.getFenotype());
 
-        Population population = new Population.Builder()
+        Population momsPopulation = new Population.Builder(8, 5)
                 .initialize()
                 .build();
-        System.out.println(population);
-        System.out.println(population.getSingleChromosome(3).getFenotype());
+        Population dadsPopulation = new Population.Builder(8, 5)
+                .initialize()
+                .build();
+
+        Population best = AlgorithmEngine.evolve(momsPopulation, dadsPopulation);
+
+        Chromosome result = Function.findChromosomeWithBiggestPhenotype(best);
+        System.out.println("\n===========================\n" +
+                "The fittest chromoseome: " + result.toString()
+                + "\n has phenotype = " + result.getPhenotype());
     }
 }

@@ -5,23 +5,48 @@ import java.util.Arrays;
 public class Population {
     private Chromosome[] chromosomes;
 
-    public Population(Builder populationBuilder) {
+    private Population(Builder populationBuilder) {
         this.chromosomes = populationBuilder.chromosomes;
     }
 
-    public Chromosome getSingleChromosome(int index) {
+    Chromosome getSingleChromosome(int index) {
         return chromosomes[index];
     }
 
-    public int size() {
+    int size() {
         return chromosomes.length;
     }
 
-    public void saveChromosome(int index, Chromosome chromosome) {
+    void saveChromosome(int index, Chromosome chromosome) {
         chromosomes[index] = chromosome;
     }
 
-//    todo: Add method getFittestPopulation()
+    Chromosome getFittestPopulation() {
+        Function fitness = new Function();
+        if (chromosomes.length > 0) {
+            Chromosome fittest = new Chromosome.Builder()
+                    .configNullGenes()
+                    .build();
+
+            while (chromosomes[0] == null) {
+                byte[] temp = {0, 0, 0, 0, 1};
+                chromosomes[0].setGenes(temp);
+            }
+//            fittest = Objects.requireNonNull(chromosomes[0]);
+            for (int i = 0; i < AlgorithmEngine.geneNumber; i++) {
+                if (!(fittest == null)) {
+                    while (fittest.getPhenotype() <= getSingleChromosome(i).getPhenotype()) {
+                        fittest = fitness.rouletteSelectionFunction(this);
+                        break;
+                    }
+                }
+            }
+            return fittest;
+        } else {
+            System.out.println("Empty population. There must be at least one chromosome");
+            return null;
+        }
+    }
 
 
     @Override
@@ -33,11 +58,11 @@ public class Population {
 
     public static class Builder {
 
-        public Chromosome[] chromosomes;
+        Chromosome[] chromosomes;
         int populationSize;
         int geneNumber;
 
-        public Builder() {
+        Builder() {
         }
 
 
@@ -46,42 +71,41 @@ public class Population {
             this.geneNumber = geneNumber;
         }
 
-        //  TODO:     class variable TOURNAMENT_Size = 8
-        public Builder configNullPopulation() {
-            this.chromosomes = new Chromosome[8];
-            for (int i = 0; i < 8; i++) {
-                Chromosome chromosome = new Chromosome.Builder()
-                        .configNullGenes()
-                        .build();
-                saveChromosome(i, chromosome);
+        Builder configNullPopulation() {
+            this.chromosomes = new Chromosome[AlgorithmEngine.TOURNAMENT_Size];
+            if (populationSize <= AlgorithmEngine.TOURNAMENT_Size) {
+                for (int i = 0; i < AlgorithmEngine.TOURNAMENT_Size; i++) {
+                    Chromosome chromosome = new Chromosome.Builder()
+                            .configNullGenes()
+                            .build();
+                    saveChromosome(i, chromosome);
+                }
+            } else {
+                System.out.println("Population size can not be larger than 8");
             }
-            //        else {
-            //            System.out.println("Population size can not be larger than 8");
-            //        }
-
             return this;
         }
 
         public Builder initialize() {
-            chromosomes = new Chromosome[8];
-            //        TODO      : Add If loop to compare populationSize <= TORNAMENT_Size
-            for (int i = 0; i < 8; i++) {
-                Chromosome temp = new Chromosome.Builder()
-                        .initialize()
-                        .build();
-                this.saveChromosome(i, temp);
+            chromosomes = new Chromosome[AlgorithmEngine.TOURNAMENT_Size];
+            if (populationSize <= AlgorithmEngine.TOURNAMENT_Size) {
+                for (int i = 0; i < AlgorithmEngine.TOURNAMENT_Size; i++) {
+                    Chromosome temp = new Chromosome.Builder()
+                            .initialize()
+                            .build();
+                    this.saveChromosome(i, temp);
+                }
+            } else {
+                System.out.println("Population size can not be larger than 8");
             }
-//        else {
-//            System.out.println("Population size can not be larger than 8");
-//        }
             return this;
         }
 
-        public void saveChromosome(int index, Chromosome chromosome) {
+        void saveChromosome(int index, Chromosome chromosome) {
             this.chromosomes[index] = chromosome;
         }
 
-        public Population build(){
+        public Population build() {
             return new Population(this);
         }
 
