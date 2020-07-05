@@ -3,16 +3,23 @@ package gntic_algrtm;
 public class Function {
     private Chromosome chromosome;
 
-    static double calculatePhenotypesSum(Population population) {
+    private static double calculateAdaptationFunction(Chromosome chromosome) {
+        double function = 0;
+        //fenotyp nie może być ujemny. Inaczej ruletka nei zadziała
+        if (chromosome.getPhenotype() == 0) {
+            function += functionForZeroPhenotype(chromosome);
+        } else {
+            function += functionForNonZeroPhenotype(chromosome);
+        }
+        return function;
+    }
+
+    static double calculatePopulationSumOfAdaptationFunction(Population population) {
         double function = 0;
         for (int i = 0; i < population.size(); i++) {
-            if (population.getSingleChromosome(i).getPhenotype() == 0) {
-                function += Math.sqrt(population.getSingleChromosome(i).getPhenotype() + 1);
-            } else {
-                function += 2 * Math.log10(population.getSingleChromosome(i).getPhenotype())
-                        + Math.sqrt(population.getSingleChromosome(i).getPhenotype() + 1);
-            }
+            function = function + calculateAdaptationFunction(population.getSingleChromosome(i));
         }
+
         return function;
     }
 
