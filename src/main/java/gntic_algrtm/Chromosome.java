@@ -53,11 +53,14 @@ public class Chromosome {
 
     public static class Builder {
         private int geneNumber;
-        private byte[] genes = new byte[AlgorithmEngine.geneNumber];
+        private byte[] genes = new byte[geneNumber];
 
-        public Builder geneNumber(int geneNumber) {
+        public Builder() {
+        }
+
+        public Builder(int geneNumber) {
             this.geneNumber = geneNumber;
-            return this;
+            this.genes = new byte[geneNumber];
         }
 
         public Builder configNullGenes() {

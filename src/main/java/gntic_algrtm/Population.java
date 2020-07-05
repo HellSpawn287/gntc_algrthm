@@ -87,7 +87,7 @@ public class Population {
             this.chromosomes = new Chromosome[AlgorithmEngine.TOURNAMENT_Size];
             if (populationSize <= AlgorithmEngine.TOURNAMENT_Size) {
                 for (int i = 0; i < AlgorithmEngine.TOURNAMENT_Size; i++) {
-                    Chromosome chromosome = new Chromosome.Builder()
+                    Chromosome chromosome = new Chromosome.Builder(geneNumber)
                             .configNullGenes()
                             .build();
                     saveChromosome(i, chromosome);
@@ -102,7 +102,7 @@ public class Population {
             chromosomes = new Chromosome[AlgorithmEngine.TOURNAMENT_Size];
             if (populationSize <= AlgorithmEngine.TOURNAMENT_Size) {
                 for (int i = 0; i < AlgorithmEngine.TOURNAMENT_Size; i++) {
-                    Chromosome temp = new Chromosome.Builder()
+                    Chromosome temp = new Chromosome.Builder(geneNumber)
                             .initialize()
                             .build();
                     this.saveChromosome(i, temp);
