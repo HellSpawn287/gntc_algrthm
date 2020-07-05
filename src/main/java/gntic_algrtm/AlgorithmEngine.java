@@ -45,13 +45,21 @@ public class AlgorithmEngine {
         return offspring;
     }
 
-    private static void mutate(Chromosome chromosome) {
+    private static Chromosome mutate(Chromosome chromosome) {
+        Chromosome result = chromosome;
         for (int i = 0; i < chromosome.size(); i++) {
-            if (Math.random() <= MUTATION_RATE) {
-                byte gene = (byte) Math.round(Math.random());
-                chromosome.setSingleGene(i, gene);
+            double random = Math.random();
+            if (random <= MUTATION_RATE) {
+                byte gene = (byte) Math.round(random);
+                result.setSingleGene(i, gene);
+                System.out.println("\t\t Mutation rate : " + random +
+                        "\n\t\t Chromosome before : " + chromosome.toString() +
+                        "\n\t\t Chromosome after : " + result.toString());
+            }else {
+                System.out.println("\t\t Mutation does NOT OCCURES. The mutation rate is : " + random);
             }
         }
+        return result;
     }
 
     private static Chromosome selectionByTournament(Population population) {
