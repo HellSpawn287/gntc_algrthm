@@ -60,13 +60,15 @@ public class Chromosome {
             return this;
         }
 
-        Builder configNullGenes() {
-            byte[] nullGenes = {0, 0, 0, 0, 0};
+        public Builder configNullGenes() {
+            byte[] nullGenes = {0, 0, 0, 0, 0, 0, 0, 0};
+//            byte[] nullGenes = {0, 0, 0, 0, 0};
             this.genes = nullGenes;
+
             return this;
         }
 
-        Builder initialize() {
+        public Builder initialize() {
             for (int i = 0; i < AlgorithmEngine.geneNumber; i++) {
                 byte gene = (byte) Math.round(Math.random());
                 genes[i] = gene;
@@ -74,7 +76,7 @@ public class Chromosome {
             return this;
         }
 
-        Chromosome build() {
+        public Chromosome build() {
             return new Chromosome(this);
         }
     }
