@@ -5,8 +5,12 @@ public class AlgorithmEngine {
     private static double CROSSOVER_POINT = 0.8;
     private static double MUTATION_RATE = 0.2;
     static int geneNumber = 5;
-    private static int populationSize = 8;
+    private static int populationSize = 2;
     private static boolean elitism = true;
+
+    public static void setPopulationSize(int populationSize) {
+        AlgorithmEngine.populationSize = populationSize;
+    }
 
     static {
         TOURNAMENT_Size = populationSize;
@@ -30,17 +34,21 @@ public class AlgorithmEngine {
                 int range = max - min + 1;
 
                 float crossoverPoint = (int) (Math.random() * range) + min;
-                System.out.println("Crossover point is from range "
+                System.out.println("\tCrossover point is from range "
                         + min + "-" + max + " is: " + crossoverPoint);
                 for (int i = min; i < max; i++) {
                     for (int j = min; j < crossoverPoint; j++) {
+                        System.out.println("CROSSOVER: " +
+                                "\n\t mother chromosome: " + mother.toString() +
+                                "\n\t father chromosome: " + father.toString());
                         offspring.setGenes(mother.getGenes());
                         offspring.setSingleGene(j, father.getSingleGene(j));
                     }
                 }
+                System.out.println("\n\t child chromosome: " + offspring.toString());
             }
         }
-        System.out.println("Offspring:\t= " + offspring);
+        System.out.println("\tOffspring:\t= " + offspring);
 
         return offspring;
     }
@@ -55,7 +63,7 @@ public class AlgorithmEngine {
                 System.out.println("\t\t Mutation rate : " + random +
                         "\n\t\t Chromosome before : " + chromosome.toString() +
                         "\n\t\t Chromosome after : " + result.toString());
-            }else {
+            } else {
                 System.out.println("\t\t Mutation does NOT OCCURES. The mutation rate is : " + random);
             }
         }
@@ -73,18 +81,22 @@ public class AlgorithmEngine {
         return tournamentParticipants.getFittestPopulation();
     }
 
-    public static Population evolve(Population population1, Population population2) {
-        Population offspring = new Population.Builder()
-                .configNullPopulation()
-                .build();
+    public static Population evolve(Population moms, Population dads) {
+        Population offspring = moms;
 
         if (elitism) {
-            int fathersPhenotype = Function.findBiggestPopulationPhenotype(population1);
-            int mothersPhenotype = Function.findBiggestPopulationPhenotype(population2);
-            if (fathersPhenotype >= mothersPhenotype){
-                offspring.saveChromosome(0, population1.getFittestPopulation());
+            int mothersPhenotype = Function.findBiggestPopulationPhenotype(moms);
+            int fathersPhenotype = Function.findBiggestPopulationPhenotype(dads);
+
+            System.out.println("\n+++++++++++++++++" +
+                    "\nBiggest phenotype from mothers is: " + mothersPhenotype +
+                    "\nBiggest phenotype from fathers is: " + fathersPhenotype +
+                    "\n+++++++++++++++++++");
+
+            if (mothersPhenotype >= fathersPhenotype) {
+                offspring.saveChromosome(0, moms.getFittestPopulation());
             } else {
-                offspring.saveChromosome(0, population2.getFittestPopulation());
+                offspring.saveChromosome(0, dads.getFittestPopulation());
             }
 
         }
@@ -94,19 +106,20 @@ public class AlgorithmEngine {
             numberOfElitism = 1;
         } else numberOfElitism = 0;
 
-        for (int i = numberOfElitism ; i < populationSize ; i++) {
-            Chromosome parent_One = selectionByTournament(population1);
-            Chromosome parent_Two = selectionByTournament(population2);
+        for (int i = numberOfElitism; i < populationSize; i++) {
+            Chromosome parent_One = selectionByTournament(dads);
+            Chromosome parent_Two = selectionByTournament(moms);
             Chromosome child = crossover(parent_One, parent_Two);
-            offspring.saveChromosome(i,child);
+            offspring.saveChromosome(i, child);
         }
 
-        for (int i = numberOfElitism ; i < populationSize ; i++) {
-            mutate(offspring.getSingleChromosome(i));
+        for (int i = numberOfElitism; i < populationSize; i++) {
+            Chromosome mutated = mutate(offspring.getSingleChromosome(i));
+            offspring.saveChromosome(i, mutated);
         }
 
-        System.out.println("\n====>>>\nEvolved population : \n" + "Name: offspringPopulation, \n" + offspring.toString()
-                + "\n offspring got fitness score\t= " + Function.calculatePhenotypesSum(offspring));
+        System.out.println("\n====>>>\n\tEvolved population : \n" + "\t\tName: offspringPopulation, \n" + offspring.toString()
+                + "\n\t\tOffspring got fitness score = " + Function.calculatePopulationSumOfAdaptationFunction(offspring));
 
         return offspring;
     }
