@@ -1,6 +1,8 @@
 package gntic_algrtm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Population {
     private Chromosome[] chromosomes;
@@ -13,7 +15,7 @@ public class Population {
         return chromosomes[index];
     }
 
-    int size() {
+    public int size() {
         return chromosomes.length;
     }
 
@@ -29,7 +31,7 @@ public class Population {
                     .build();
 
             while (chromosomes[0] == null) {
-                byte[] temp = {0, 0, 0, 0, 1};
+                byte[] temp = {0, 0, 0, 0, 0, 0, 0, 0};
                 chromosomes[0].setGenes(temp);
             }
 //            fittest = Objects.requireNonNull(chromosomes[0]);
@@ -48,12 +50,23 @@ public class Population {
         }
     }
 
+    public Chromosome[] addChromosome(Chromosome arrival) {
+        List<Chromosome> temporal = new ArrayList<>(Arrays.asList(this.chromosomes));
+        temporal.add(arrival);
+        Chromosome[] extendedChromosomes = temporal.toArray(this.chromosomes);
+        setChromosomes(extendedChromosomes);
+        return extendedChromosomes;
+    }
+
+    public void setChromosomes(Chromosome[] chromosomes) {
+        this.chromosomes = chromosomes;
+    }
 
     @Override
     public String toString() {
-        return "Population{\n" +
-                "chromosomes= " + Arrays.toString(chromosomes) +
-                '}';
+        return "\t\tPopulation {" +
+                "\n\t\t\tchromosomes= " + Arrays.toString(chromosomes) +
+                "\n\t\t}";
     }
 
     public static class Builder {
@@ -64,7 +77,6 @@ public class Population {
 
         Builder() {
         }
-
 
         public Builder(int populationSize, int geneNumber) {
             this.populationSize = populationSize;
@@ -108,6 +120,5 @@ public class Population {
         public Population build() {
             return new Population(this);
         }
-
     }
 }
