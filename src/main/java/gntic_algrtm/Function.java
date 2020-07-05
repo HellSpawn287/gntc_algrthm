@@ -45,102 +45,96 @@ public class Function {
 
     Chromosome rouletteSelectionFunction(Population population) {
 
-        double populationSum = calculatePhenotypesSum(population);
+        double populationSum = calculatePopulationSumOfAdaptationFunction(population);
+        System.out.println("\n\nPopulation chosen for roulette selection is: \n" +
+                population.toString() + "\n its sum of each chromosome adaptation function = " + populationSum);
+        double[] endPoints = new double[AlgorithmEngine.TOURNAMENT_Size];
 
-        double chrom1_1_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(0), populationSum);
-        double chrom1_2_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(1), populationSum);
-        double chrom1_3_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(2), populationSum);
-        double chrom1_4_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(3), populationSum);
-        double chrom1_5_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(4), populationSum);
-        double chrom1_6_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(5), populationSum);
-        double chrom1_7_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(6), populationSum);
-        double chrom1_8_EndPoint = getChromosomePercentage(
-                population.getSingleChromosome(7), populationSum);
+        for (int i = 0; i < endPoints.length; i++) {
+            endPoints[i] = getChromosomePercentage(population.getSingleChromosome(i), populationSum);
+        }
 
-        double range_One = chrom1_1_EndPoint;
-        double range_Two = range_One + chrom1_2_EndPoint;
-        double range_Three = range_Two + chrom1_3_EndPoint;
-        double range_Four = range_Three + chrom1_4_EndPoint;
-        double range_Five = range_Four + chrom1_5_EndPoint;
-        double range_Six = range_Five + chrom1_6_EndPoint;
-        double range_Seven = range_Six + chrom1_7_EndPoint;
-        double range_Eight = range_Seven + chrom1_8_EndPoint;
+        double[] ranges = new double[AlgorithmEngine.TOURNAMENT_Size];
 
-        System.out.println(
-                "\nRoulette selection ranges :" +
-                        "\nChromosome 1:  from " + 0 + " to -> " + range_One +
-                        "\nChromosome 2:  from " + range_One + " to -> " + range_Two +
-                        "\nChromosome 3:  from " + range_Two + " to -> " + range_Three +
-                        "\nChromosome 4:  from " + range_Three + " to -> " + range_Four +
-                        "\nChromosome 5:  from " + range_Four + " to -> " + range_Five +
-                        "\nChromosome 6:  from " + range_Five + " to -> " + range_Six +
-                        "\nChromosome 7:  from " + range_Six + " to -> " + range_Seven +
-                        "\nChromosome 8:  from " + range_Seven + " to -> " + range_Eight +
-                        "\n" +
-                        "\n"
-        );
+        ranges[0] = endPoints[0];
+        for (int i = 1; i < endPoints.length; i++) {
+            ranges[i] = ranges[i - 1] + endPoints[i];
+        }
 
-        double randomRouletteNumber = (Math.floor(Math.random() * range_Eight));
+        System.out.println("\n\nRoulette selection ranges :");
+        for (int i = 0; i < ranges.length; i++) {
+            if (i == 0) {
+                System.out.println("\n\tChromosome " + i + ":  from " + 0 + "% to -> " + String.format("%.2f", ranges[i]) + "%");
+            } else {
+                System.out.println("\tChromosome " + (i + 1) + ":  from " + String.format("%.2f", ranges[i - 1]) +
+                        "% to -> " + String.format("%.2f", ranges[i]) + "%");
+            }
+        }
+        System.out.println("\n\n");
 
-        System.out.println("Random number is: =>> " + randomRouletteNumber);
+        double randomRouletteNumber = (Math.floor(Math.random() * ranges[7]));
 
-        if (isBetween(randomRouletteNumber, 0, range_One)) {
-            System.out.println("Random number " +
+        System.out.println("RESULT: " +
+                "\n\tRandom number is: =>> " + randomRouletteNumber);
+
+        if (isBetween(randomRouletteNumber, 0, ranges[0])) {
+            System.out.println("\tRandom number " +
                     randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(0) + "]");
+
             return this.chromosome = population.getSingleChromosome(0);
-        } else if (isBetween(randomRouletteNumber, range_One, range_Two)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[0], ranges[1])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range TWO.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(1) + "]");
+
             return this.chromosome = population.getSingleChromosome(1);
-        } else if (isBetween(randomRouletteNumber, range_Two, range_Three)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[1], ranges[2])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range THREE.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(2) + "]");
+
             return this.chromosome = population.getSingleChromosome(2);
-        } else if (isBetween(randomRouletteNumber, range_Three, range_Four)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[2], ranges[3])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range FOUR.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(3) + "]");
+
             return this.chromosome = population.getSingleChromosome(3);
-        } else if (isBetween(randomRouletteNumber, range_Four, range_Five)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[3], ranges[4])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range FIVE.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(4) + "]");
+
             return this.chromosome = population.getSingleChromosome(4);
-        } else if (isBetween(randomRouletteNumber, range_Five, range_Six)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[4], ranges[5])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range SIX.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(5) + "]");
+
             return this.chromosome = population.getSingleChromosome(5);
-        } else if (isBetween(randomRouletteNumber, range_Six, range_Seven)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[5], ranges[6])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range SEVEN.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(6) + "]");
+
             return this.chromosome = population.getSingleChromosome(6);
-        } else if (isBetween(randomRouletteNumber, range_Seven, range_Eight)) {
-            System.out.println("Random number " +
-                    randomRouletteNumber + "\tis in range ONE.");
-            System.out.println("Selected chromosome ONE : ["
+        } else if (isBetween(randomRouletteNumber, ranges[6], ranges[7])) {
+            System.out.println("\tRandom number " +
+                    randomRouletteNumber + "\tis in range EIGHT.");
+            System.out.println("\tSelected chromosome ONE : ["
                     + population.getSingleChromosome(7) + "]");
+
             return this.chromosome = population.getSingleChromosome(7);
         } else {
-            System.out.println("Random number " + randomRouletteNumber + "\tis NOT in ANY range.");
+            System.out.println("\tRandom number " + randomRouletteNumber + "\tis NOT in ANY range.");
         }
         return this.chromosome;
     }
