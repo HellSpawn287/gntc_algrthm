@@ -39,7 +39,7 @@ public class Function {
                 "Biggest phenotype of this population is : " + biggestPhenotype);
         System.out.println("Chromosome with biggest phenotype is: " + withBiggest.toString()
                 + "\n=================");
-
+        System.out.println("The adaptation function : y = " + calculateAdaptationFunction(withBiggest));
         return withBiggest;
     }
 
@@ -141,12 +141,13 @@ public class Function {
 
     private double getChromosomePercentage(Chromosome chromosome, double populationSum) {
         double chromosomePercentage;
+
         if (chromosome.getPhenotype() == 0) {
-            chromosomePercentage = ((Math.sqrt(chromosome.getPhenotype() + 1) / populationSum) * 100);
+            chromosomePercentage = ((functionForZeroPhenotype(chromosome) / populationSum) * 100);
         } else {
-            chromosomePercentage = ((2 * Math.log10(chromosome.getPhenotype())
-                    + Math.sqrt(chromosome.getPhenotype() + 1) / populationSum) * 100);
+            chromosomePercentage = (((functionForNonZeroPhenotype(chromosome)) / populationSum) * 100);
         }
+
         return chromosomePercentage;
     }
 
@@ -154,16 +155,21 @@ public class Function {
         return lower <= x && x < upper;
     }
 
-    static int findBiggestPopulationPhenotype(Population population){
+    static int findBiggestPopulationPhenotype(Population population) {
         int biggestPhenotype = 0;
         for (int i = 0; i < population.size(); i++) {
             biggestPhenotype = Math.max(population.getSingleChromosome(i).getPhenotype(), biggestPhenotype);
         }
 
-        System.out.println("\n+++++++++++++++++" +
-                "\nBiggest phenotype is: " + biggestPhenotype
-        + "\n+++++++++++++++++++");
-
         return biggestPhenotype;
+    }
+
+    private static double functionForNonZeroPhenotype(Chromosome chromosome) {
+        return Math.abs(4 * Math.log10(chromosome.getPhenotype())
+                + functionForZeroPhenotype(chromosome));
+    }
+
+    private static double functionForZeroPhenotype(Chromosome chromosome) {
+        return Math.abs(7 * Math.sqrt(chromosome.getPhenotype() + 1));
     }
 }
