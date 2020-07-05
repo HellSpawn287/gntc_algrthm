@@ -94,6 +94,7 @@ public class Function {
                 return this.chromosome = population.getSingleChromosome(1);
             }
         }
+
         return this.chromosome;
     }
 
