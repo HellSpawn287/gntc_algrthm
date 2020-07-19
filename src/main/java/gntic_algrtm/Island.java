@@ -1,13 +1,17 @@
 package gntic_algrtm;
 
+import java.util.UUID;
+
 import static gntic_algrtm.AlgorithmEngine.evolve;
 
 public class Island {
+    int id;
     Population moms;
     Population dads;
     Chromosome migrating_chromosome;
 
     public Island(Population moms, Population dads) {
+        this.id = UUID.randomUUID().hashCode();
         this.moms = moms;
         this.dads = dads;
         this.migrating_chromosome =
@@ -25,6 +29,10 @@ public class Island {
 
     private static Chromosome findMigratingChromosome(Population moms, Population dads) {
         return Function.findChromosomeWithBiggestPhenotype(evolve(moms, dads));
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Population getMoms() {
@@ -55,7 +63,7 @@ public class Island {
 
     @Override
     public String toString() {
-        return "Island {" +
+        return "Island (ID: " + id + " ) {" +
                 "\n moms = " + moms.toString() +
                 "\n, dads = " + dads.toString() +
                 "\n, migrating_chromosome = " + migrating_chromosome.toString() +
