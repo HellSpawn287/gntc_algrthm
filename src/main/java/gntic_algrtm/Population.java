@@ -3,12 +3,19 @@ package gntic_algrtm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Population {
+    private final int id;
     private Chromosome[] chromosomes;
 
     private Population(Builder populationBuilder) {
+        this.id = UUID.randomUUID().hashCode();
         this.chromosomes = populationBuilder.chromosomes;
+    }
+
+    public int getId() {
+        return id;
     }
 
     Chromosome getSingleChromosome(int index) {
