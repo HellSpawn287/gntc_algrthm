@@ -3,7 +3,7 @@ package gntic_algrtm;
 public class Function {
     private Chromosome chromosome;
 
-    private static double calculateAdaptationFunction(Chromosome chromosome) {
+    public static double calculateAdaptationFunction(Chromosome chromosome) {
         double function = 0;
         //fenotyp nie może być ujemny. Inaczej ruletka nei zadziała
         if (chromosome.getPhenotype() == 0) {
@@ -30,7 +30,7 @@ public class Function {
                 .build();
         for (int i = 0; i < population.size(); i++) {
             biggestPhenotype = Math.max(population.getSingleChromosome(i).getPhenotype(), biggestPhenotype);
-            if (!(withBiggest.getPhenotype() == biggestPhenotype)) {
+            if (!(withBiggest.getPhenotype() >= biggestPhenotype)) {
                 withBiggest = population.getSingleChromosome(i);
             }
         }
