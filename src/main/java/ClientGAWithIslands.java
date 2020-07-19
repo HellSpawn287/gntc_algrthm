@@ -8,6 +8,8 @@ import java.util.List;
 public class ClientGAWithIslands {
     public static void main(String[] args) {
 
+        long start = System.currentTimeMillis();
+
         AlgorithmEngine.setTOURNAMENT_Size(62);
 
         List<Island> circleOfEvolution2_20 = createWorldOfIslands(2, 20, 8);
@@ -23,9 +25,6 @@ public class ClientGAWithIslands {
         List<Island> circleOfEvolution20_40 = createWorldOfIslands(20, 40, 8);
         List<Island> circleOfEvolution20_60 = createWorldOfIslands(20, 60, 8);
 
-
-//        IslandManager.runMigration(circleOfEvolution);
-
         IslandManager.generations(20,3, circleOfEvolution2_20);
 
 //        IslandManager.generations(20,3, circleOfEvolution2_40);
@@ -39,6 +38,10 @@ public class ClientGAWithIslands {
 //        IslandManager.generations(20,3, circleOfEvolution20_20);
 //        IslandManager.generations(20,3, circleOfEvolution20_40);
 //        IslandManager.generations(20,3, circleOfEvolution20_60);
+
+        long elapsedTimeMillis = System.currentTimeMillis() - start;
+        float elapsedTimeSec = elapsedTimeMillis / 1000F;
+        System.out.println("Finished: \n generations: " + IslandManager.generationGlobal + "\n migrations: " + IslandManager.migrationCounter + " Time: " + elapsedTimeSec + "seconds.");
 
     }
 
